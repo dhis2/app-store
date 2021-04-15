@@ -41,22 +41,16 @@ const createUser = async (params, knex) => {
 
     const { email, name } = params
 
-    try {
-        const [id] = await knex
-            .insert({
-                email,
-                name,
-                created_at: knex.fn.now(),
-            })
-            .into('users')
-            .returning('id')
+    const [id] = await knex
+        .insert({
+            email,
+            name,
+            created_at: knex.fn.now(),
+        })
+        .into('users')
+        .returning('id')
 
-        return { id, email, name }
-    } catch (err) {
-        throw new Error(
-            `Could not create user: ${params.email}. ${err.message}`
-        )
-    }
+    return { id, email, name }
 }
 
 module.exports = createUser

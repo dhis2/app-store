@@ -1,6 +1,7 @@
 const debug = require('debug')('apphub:server:security:createUserValidation')
 const Boom = require('@hapi/boom')
-
+const Bounce = require('@hapi/bounce')
+const { wrapError, UniqueViolationError } = require('db-errors')
 const { createUser } = require('../data')
 const { ROLES } = require('./index')
 
@@ -11,7 +12,6 @@ const createUserValidationFunc = (db, audience, auth0ManagementClient) => {
     return async (decoded, request, h) => {
         if (decoded && decoded.sub) {
             debug(`Valid user with external userId: ${decoded.sub}`, decoded)
-
             const isM2M = decoded.sub === `${audience}@clients`
             const returnObj = { isValid: true, credentials: decoded }
             if (!isM2M) {
@@ -47,22 +47,31 @@ const createUserValidationFunc = (db, audience, auth0ManagementClient) => {
                         debug('User with info', userInfo)
                     } catch (e) {
                         debug(e)
-                        throw Boom.conflict(
+                        throw Boom.unauthorized(
                             'Failed to get user information from Identity Provider'
                         )
                     }
                     if (!userInfo.email_verified) {
-                        throw Boom.conflict('Email not verified')
+                        throw Boom.unauthorized('Email not verified')
                     }
                     //create the user if it doesn't exist
                     const createUserTransaction = async trx => {
-                        const dbUser = await createUser(
-                            {
-                                email: userInfo.email,
-                                name: userInfo.name,
-                            },
-                            trx
-                        )
+                        let dbUser
+                        try {
+                            dbUser = await createUser(
+                                {
+                                    email: userInfo.email,
+                                    name: userInfo.name,
+                                },
+                                trx
+                            )
+                        } catch (e) {
+                            // if user exist and not current external-id throw a specific error
+                            Bounce.ignore(wrapError(e), UniqueViolationError)
+                            throw Boom.unauthorized(
+                                'Email is already registered with another provider.'
+                            )
+                        }
 
                         debug(
                             `created user with id ${dbUser.id} for email ${userInfo.email}`
