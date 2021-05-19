@@ -57,7 +57,7 @@
         "mock-knex": "^0.4.4",
         "mock-local-storage": "^1.1.8",
         "nodemon": "^1.19.2",
-        "request-promise": "^4.2.5",
+        "request-promise": "^4.2.6",
         "sinon": "^9.2.1",
         "stream-to-promise": "^3.0.0"
     }
