@@ -26,18 +26,14 @@ describe('test delete app', () => {
     })
 
     const createFormForApp = app => {
+        const readFixture = file => fs.createReadStream(
+            path.join(__dirname, '../fixtures/', file)
+        )
+
         const form = new FormData()
         form.append('app', JSON.stringify(app))
-        form.append(
-            'file',
-            fs.createReadStream(path.join(__dirname, '../', 'sample-app.zip'))
-        )
-        form.append(
-            'logo',
-            fs.createReadStream(
-                path.join(__dirname, '../', 'sample-app-logo.png')
-            )
-        )
+        form.append('file', readFixture('sample-app.zip'))
+        form.append('logo', readFixture('sample-app-logo.png'))
         return form
     }
 
