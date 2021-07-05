@@ -23,7 +23,7 @@
         "copy-text-to-clipboard": "^3.0.1",
         "core-js": "^3.4.8",
         "debug": "^4.1.1",
-        "history": "^4.5.1",
+        "history": "^5.0.0",
         "jwt-decode": "^2.1.0",
         "lodash": "^4.17.19",
         "query-string": "^6.14.0",
