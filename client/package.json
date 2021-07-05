@@ -51,7 +51,7 @@
         "@svgr/webpack": "^5.5.0",
         "babel-loader": "^8.1.0",
         "babel-plugin-rewire": "^1.2.0",
-        "babel-plugin-transform-imports": "^1.5.1",
+        "babel-plugin-transform-imports": "^2.0.0",
         "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
         "copy-webpack-plugin": "^8.1.1",
