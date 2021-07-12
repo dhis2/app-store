@@ -19,6 +19,7 @@
         "@auth0/auth0-react": "^1.2.0",
         "@dhis2/d2-i18n": "^1.1.0",
         "@dhis2/ui": "^6.6.1",
+        "@zip.js/zip.js": "^2.3.7",
         "classnames": "^2.2.5",
         "copy-text-to-clipboard": "^3.0.1",
         "core-js": "^3.4.8",

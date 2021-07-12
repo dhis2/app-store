@@ -16,6 +16,7 @@ import PropTypes from 'prop-types'
 import { useMemo } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import CreateOrganisationModal from './CreateOrganisationModal/CreateOrganisationModal'
+import UploadFileSection from './UploadFileSection'
 import styles from './UserAppUpload.module.css'
 import config from 'config'
 import { useQuery } from 'src/api'
@@ -58,7 +59,11 @@ const requestOpts = {
 }
 
 const UserAppUpload = ({ user }) => {
-    const { data: organisations, error, mutate } = useQuery(
+    const {
+        data: organisations,
+        error,
+        mutate,
+    } = useQuery(
         'organisations',
         useMemo(
             () => ({
@@ -197,6 +202,7 @@ const UserAppUpload = ({ user }) => {
             >
                 {({ form, handleSubmit, valid, submitting }) => (
                     <form onSubmit={handleSubmit}>
+                        <UploadFileSection />
                         <section className={styles.formSection}>
                             <h3 className={styles.subheader}>
                                 Basic information
@@ -367,24 +373,6 @@ const UserAppUpload = ({ user }) => {
                                     Create organisation
                                 </Button>
                             </div>
-                        </section>
-
-                        <section className={styles.formSection}>
-                            <h3 className={styles.subheader}>
-                                Upload app file (Required)
-                            </h3>
-                            <p className={styles.description}>
-                                Upload your app as a single .zip file.
-                            </p>
-                            <ReactFinalForm.Field
-                                required
-                                name="file"
-                                buttonLabel="Upload a zip file"
-                                accept=".zip"
-                                component={FileInputFieldFF}
-                                className={styles.field}
-                                validate={hasValue}
-                            />
                         </section>
 
                         <section className={styles.formSection}>
