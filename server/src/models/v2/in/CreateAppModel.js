@@ -6,6 +6,7 @@ const CreateModelAppData = Joi.object().keys({
     developer: Joi.object().keys({
         organisationId: Joi.string(),
     }),
+    coreApp: Joi.bool(),
 })
 
 const payloadSchema = Joi.object({

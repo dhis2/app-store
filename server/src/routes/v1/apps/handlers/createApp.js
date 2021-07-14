@@ -1,4 +1,5 @@
 const Boom = require('@hapi/boom')
+const Bounce = require('@hapi/bounce')
 const { AppStatus, MediaType } = require('../../../../enums')
 const CreateAppModel = require('../../../../models/v1/in/CreateAppModel')
 const {
@@ -48,9 +49,8 @@ module.exports = {
 
         const { payload } = request
         const appJsonPayload = JSON.parse(payload.app)
-        const appJsonValidationResult = CreateAppModel.def.validate(
-            appJsonPayload
-        )
+        const appJsonValidationResult =
+            CreateAppModel.def.validate(appJsonPayload)
 
         if (appJsonValidationResult.error) {
             throw Boom.badRequest(appJsonValidationResult.error)
@@ -79,16 +79,7 @@ module.exports = {
 
         const app = await db.transaction(async trx => {
             const { appType } = appJsonPayload
-            const app = await App.create(
-                {
-                    userId: currentUserId,
-                    contactEmail,
-                    organisationId,
-                    appType,
-                    status: AppStatus.PENDING,
-                },
-                trx
-            )
+            const { file } = payload
 
             const { name, description, sourceUrl } = appJsonPayload
             const {
@@ -98,6 +89,39 @@ module.exports = {
                 maxDhisVersion,
                 channel,
             } = appJsonPayload.version
+
+            let isCoreApp
+            try {
+                const { manifest } = verifyBundle({
+                    buffer: file._data,
+                    appId: null, // this can never be identical on first upload
+                    appName: name,
+                    version,
+                    organisationName: organisation.name,
+                })
+
+                isCoreApp = manifest.core_app
+                if (isCoreApp && !isManager) {
+                    throw Boom.unauthorized(
+                        `You don't have permission to upload core apps`
+                    )
+                }
+            } catch (error) {
+                Bounce.rethrow(error, 'system')
+                throw Boom.badRequest(error)
+            }
+            const app = await App.create(
+                {
+                    userId: currentUserId,
+                    contactEmail,
+                    organisationId,
+                    appType,
+                    status: AppStatus.PENDING,
+                    coreApp: isCoreApp,
+                },
+                trx
+            )
+
             const appVersion = await App.createVersionForApp(
                 app.id,
                 {
@@ -131,18 +155,6 @@ module.exports = {
                 trx
             )
 
-            const { file } = payload
-            try {
-                verifyBundle({
-                    buffer: file._data,
-                    appId: app.id,
-                    appName: name,
-                    version,
-                    organisationName: organisation.name,
-                })
-            } catch (error) {
-                throw Boom.badRequest(error)
-            }
             const appUpload = saveFile(
                 `${app.id}/${appVersion.id}`,
                 'app.zip',

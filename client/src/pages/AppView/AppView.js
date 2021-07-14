@@ -5,6 +5,7 @@ import {
     Card,
     Divider,
     Button,
+    Tag,
 } from '@dhis2/ui'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
@@ -17,7 +18,13 @@ import Screenshots from 'src/components/Screenshots/Screenshots'
 import Versions from 'src/components/Versions/Versions'
 import { renderDhisVersionsCompatibility } from 'src/lib/render-dhis-versions-compatibility'
 
-const HeaderSection = ({ appName, appDeveloper, appType, logoSrc }) => (
+const HeaderSection = ({
+    appName,
+    appDeveloper,
+    appType,
+    logoSrc,
+    isCoreApp,
+}) => (
     <section
         className={classnames(styles.appCardSection, styles.appCardHeader)}
     >
@@ -27,6 +34,7 @@ const HeaderSection = ({ appName, appDeveloper, appType, logoSrc }) => (
             <span className={styles.appCardDeveloper}>by {appDeveloper}</span>
             <span className={styles.appCardType}>{appType}</span>
         </div>
+        {isCoreApp && <Tag>Core App</Tag>}
     </section>
 )
 
@@ -34,6 +42,7 @@ HeaderSection.propTypes = {
     appDeveloper: PropTypes.string.isRequired,
     appName: PropTypes.string.isRequired,
     appType: PropTypes.string.isRequired,
+    isCoreApp: PropTypes.bool,
     logoSrc: PropTypes.string,
 }
 
@@ -111,6 +120,7 @@ const AppView = ({ match }) => {
                 appDeveloper={appDeveloper}
                 appType={config.ui.appTypeToDisplayName[app.appType]}
                 logoSrc={logoSrc}
+                isCoreApp={app.coreApp}
             />
             <Divider />
             <AboutSection

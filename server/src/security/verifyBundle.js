@@ -10,7 +10,7 @@ const isValidJSON = json => {
 }
 
 const checkManifest = ({ manifest, appId, appName, version, canBeCoreApp }) => {
-    if (manifest.app_hub_id && manifest.app_hub_id !== appId) {
+    if (appId && manifest.app_hub_id && manifest.app_hub_id !== appId) {
         throw new Error('Manifest App Hub ID does not match app ID')
     }
     if (manifest.name !== appName) {
@@ -29,7 +29,7 @@ const checkManifest = ({ manifest, appId, appName, version, canBeCoreApp }) => {
 }
 
 const checkD2Config = ({ d2Config, appId, appName, version, canBeCoreApp }) => {
-    if (d2Config.id && d2Config.id !== appId) {
+    if (appId && d2Config.id && d2Config.id !== appId) {
         throw new Error('D2 config App Hub ID does not match app ID')
     }
     if (d2Config.title !== appName) {
@@ -65,10 +65,9 @@ module.exports = ({ buffer, appId, appName, version, organisationName }) => {
         version,
         canBeCoreApp,
     })
-
     // D2 config is optional
     if (!entries.includes(d2ConfigPath)) {
-        return
+        return { manifest }
     }
     const d2ConfigJson = zip.readAsText(d2ConfigPath)
     if (!isValidJSON(d2ConfigJson)) {
@@ -82,4 +81,9 @@ module.exports = ({ buffer, appId, appName, version, organisationName }) => {
         version,
         canBeCoreApp,
     })
+
+    return {
+        manifest,
+        d2Config,
+    }
 }

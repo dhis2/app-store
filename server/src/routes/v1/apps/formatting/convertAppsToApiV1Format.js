@@ -1,10 +1,8 @@
 const debug = require('debug')(
     'apphub:server:routes:v1:apps:formatting:convertAppsToApiV1Format'
 )
-
-const getServerUrl = require('../../../../utils/getServerUrl')
-
 const { MediaType } = require('../../../../enums')
+const getServerUrl = require('../../../../utils/getServerUrl')
 
 const convertDbAppViewRowToAppApiV1Object = app => ({
     appType: app.type,
@@ -17,7 +15,7 @@ const convertDbAppViewRowToAppApiV1Object = app => ({
 
     name: app.name,
     description: app.description || '',
-
+    coreApp: app.core_app,
     versions: [],
 
     //TODO: set address

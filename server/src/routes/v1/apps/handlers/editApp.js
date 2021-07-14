@@ -52,7 +52,8 @@ module.exports = {
         debug('appsUserCanEdit:', appsUserCanEdit)
         debug('userCanEditApp:', userCanEditApp)
 
-        if (currentUserIsManager(request) || userCanEditApp) {
+        const isManager = currentUserIsManager(request)
+        if (isManager || userCanEditApp) {
             //can edit app
             const transaction = await db.transaction()
 
@@ -62,6 +63,7 @@ module.exports = {
                     description,
                     appType,
                     sourceUrl,
+                    coreApp
                 } = request.payload
 
                 await updateApp(
@@ -73,6 +75,7 @@ module.exports = {
                         sourceUrl,
                         appType,
                         languageCode: 'en',
+                        coreApp: isManager ? coreApp : undefined
                     },
                     db,
                     transaction

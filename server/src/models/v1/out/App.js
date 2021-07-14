@@ -1,10 +1,8 @@
 const Joi = require('@hapi/joi')
-
 const { AppStatuses, AppTypes } = require('../../../enums')
-
-const Version = require('./Version')
-const Developer = require('./User')
 const Image = require('./Image')
+const Developer = require('./User')
+const Version = require('./Version')
 
 // v1 api schema
 const def = Joi.object().keys({
@@ -15,40 +13,29 @@ const def = Joi.object().keys({
     created: Joi.number(),
 
     description: Joi.string().allow(''),
+    coreApp: Joi.bool(),
 
     developer: Developer.required(),
 
-    images: Joi.array()
-        .items(Image)
-        .required(),
+    images: Joi.array().items(Image).required(),
 
-    id: Joi.string()
-        .uuid()
-        .required(),
+    id: Joi.string().uuid().required(),
 
     lastUpdated: Joi.number(),
 
-    name: Joi.string()
-        .max(255, 'utf8')
-        .required(),
+    name: Joi.string().max(255, 'utf8').required(),
 
     owner: Joi.string().required(),
 
-    reviews: Joi.array()
-        .items(Joi.any())
-        .required(),
+    reviews: Joi.array().items(Joi.any()).required(),
 
-    sourceUrl: Joi.string()
-        .uri()
-        .allow(''),
+    sourceUrl: Joi.string().uri().allow(''),
 
     status: Joi.string()
         .required()
         .valid(...AppStatuses),
 
-    versions: Joi.array()
-        .items(Version)
-        .min(1),
+    versions: Joi.array().items(Version).min(1),
 })
 
 module.exports = {

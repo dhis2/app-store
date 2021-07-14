@@ -1,18 +1,12 @@
 const joi = require('@hapi/joi')
-const { slugify } = require('../utils/slugify')
 const { AppTypes } = require('../enums')
+const { slugify } = require('../utils/slugify')
 
 const paramsSchema = joi
     .object()
     .keys({
-        id: joi
-            .string()
-            .uuid()
-            .required(),
-        userId: joi
-            .string()
-            .uuid()
-            .required(),
+        id: joi.string().uuid().required(),
+        userId: joi.string().uuid().required(),
         name: joi.string().max(100),
         description: joi.string().allow(''),
         appType: joi.string().valid(...AppTypes),
@@ -23,10 +17,8 @@ const paramsSchema = joi
             .uri({
                 scheme: ['http', 'https'],
             }),
-        languageCode: joi
-            .string()
-            .max(2)
-            .required(),
+        languageCode: joi.string().max(2).required(),
+        coreApp: joi.bool(),
     })
     .options({ allowUnknown: true })
 
@@ -71,6 +63,7 @@ const updateApp = async (params, knex) => {
         appType,
         description,
         languageCode,
+        coreApp,
     } = params
 
     try {
@@ -85,6 +78,7 @@ const updateApp = async (params, knex) => {
                 type: appType,
                 updated_at: knex.fn.now(),
                 updated_by_user_id: userId,
+                core_app: coreApp,
             })
             .where({
                 id,

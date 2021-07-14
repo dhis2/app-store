@@ -18,7 +18,7 @@
 
 .appCardHeader {
     display: grid;
-    grid-template-columns: 72px auto;
+    grid-template-columns: 72px auto 67px;
     grid-gap: var(--spacers-dp12);
 }
 

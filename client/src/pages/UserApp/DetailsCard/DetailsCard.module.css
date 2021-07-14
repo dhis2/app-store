@@ -1,6 +1,6 @@
 .detailsCardHeader {
     display: grid;
-    grid-template-columns: 120px auto;
+    grid-template-columns: 120px auto 67px;
     grid-gap: var(--spacers-dp12);
     margin-bottom: var(--spacers-dp8);
 }

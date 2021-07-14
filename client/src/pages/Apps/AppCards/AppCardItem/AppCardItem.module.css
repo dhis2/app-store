@@ -17,7 +17,7 @@
 
 .appCardHeader {
     display: grid;
-    grid-template-columns: 72px auto;
+    grid-template-columns: 72px auto 67px;
     grid-gap: var(--spacers-dp12);
 }
 
@@ -49,4 +49,8 @@
     color: var(--colors-grey800);
     font-size: 15px;
     line-height: 21px;
+}
+
+.coreAppIcon {
+    width: 25px
 }

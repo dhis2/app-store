@@ -1,5 +1,4 @@
 const joi = require('@hapi/joi')
-
 const { AppTypes } = require('../../../enums')
 
 const payloadSchema = joi.object({
@@ -13,6 +12,7 @@ const payloadSchema = joi.object({
     }),
     name: joi.string().max(100),
     sourceUrl: joi.string().allow(''),
+    coreApp: joi.bool(),
 })
 
 const EditAppModel = payloadSchema

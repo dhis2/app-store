@@ -1,3 +1,4 @@
+import { Tag } from '@dhis2/ui'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Link } from 'react-router-dom'
@@ -13,7 +14,15 @@ const summarise = text => {
     return text
 }
 
-const AppCardItem = ({ id, name, developer, type, description, images }) => {
+const AppCardItem = ({
+    id,
+    name,
+    developer,
+    type,
+    description,
+    images,
+    isCoreApp,
+}) => {
     const logo = images.find(elem => elem.logo)
 
     return (
@@ -29,6 +38,7 @@ const AppCardItem = ({ id, name, developer, type, description, images }) => {
                         {config.ui.appTypeToDisplayName[type]}
                     </span>
                 </div>
+                {isCoreApp && <Tag>Core App</Tag>}
             </header>
 
             <p className={styles.appCardDescription}>
@@ -48,6 +58,7 @@ AppCardItem.propTypes = {
     type: PropTypes.string.isRequired,
     description: PropTypes.string,
     images: PropTypes.array,
+    isCoreApp: PropTypes.bool,
 }
 
 export default AppCardItem

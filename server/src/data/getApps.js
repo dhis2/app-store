@@ -42,11 +42,8 @@ const getApps = (
                 })
             }
 
-            if (coreApp) {
-                builder.where('organisation', 'DHIS2')
-            }
-            if (coreApp === false) {
-                builder.whereNot('organisation', 'DHIS2')
+            if (typeof coreApp === 'boolean') {
+                builder.where('core_app', coreApp)
             }
 
             if (query) {

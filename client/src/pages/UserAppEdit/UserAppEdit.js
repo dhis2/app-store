@@ -7,15 +7,18 @@ import {
     ReactFinalForm,
     InputFieldFF,
     TextAreaFieldFF,
+    SwitchFieldFF,
     hasValue,
     url,
 } from '@dhis2/ui'
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styles from './UserAppEdit.module.css'
 import { useQueryV1 } from 'src/api'
 import * as api from 'src/api'
 import { useSuccessAlert, useErrorAlert } from 'src/lib/use-alert'
+import { isManager as isManagerSelector } from 'src/selectors/userSelectors'
 
 const UserAppEdit = ({ match }) => {
     const { appId } = match.params
@@ -23,6 +26,7 @@ const UserAppEdit = ({ match }) => {
     const history = useHistory()
     const successAlert = useSuccessAlert()
     const errorAlert = useErrorAlert()
+    const isManager = useSelector(isManagerSelector)
 
     const handleSubmit = async values => {
         try {
@@ -101,6 +105,18 @@ const UserAppEdit = ({ match }) => {
                             className={styles.field}
                             validate={url}
                         />
+                        {isManager && (
+                            <ReactFinalForm.Field
+                                name="coreApp"
+                                label="Core App"
+                                type="checkbox"
+                                placeholder="e.g. https://github.com/user/app"
+                                helpText="Set the app as an Core app, normally this is set from the manifest when uploading an app."
+                                initialValue={app.coreApp}
+                                component={SwitchFieldFF}
+                                className={styles.field}
+                            />
+                        )}
                         <Button
                             primary
                             type="submit"

@@ -1,25 +1,18 @@
 const joi = require('@hapi/joi')
-
 const debug = require('debug')('apphub:server:data:createApp')
-
 const { AppTypes } = require('../enums')
 
 const paramsSchema = joi
     .object()
     .keys({
-        userId: joi
-            .string()
-            .uuid()
-            .required(),
+        userId: joi.string().uuid().required(),
         contactEmail: joi.string().email(),
-        orgId: joi
-            .string()
-            .uuid()
-            .required(),
+        orgId: joi.string().uuid().required(),
         appType: joi
             .string()
             .required()
             .valid(...AppTypes),
+        coreApp: joi.bool(),
     })
     .options({ allowUnknown: true })
 
@@ -48,7 +41,7 @@ const createApp = async (params, knex) => {
     }
 
     debug('params: ', params)
-    const { userId, contactEmail, orgId, appType } = params
+    const { userId, contactEmail, orgId, appType, coreApp } = params
 
     //generate a new uuid to insert
 
@@ -60,6 +53,7 @@ const createApp = async (params, knex) => {
                 contact_email: contactEmail,
                 organisation_id: orgId,
                 type: appType,
+                core_app: coreApp,
             })
             .returning('id')
 

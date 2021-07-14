@@ -8,7 +8,14 @@ const {
 } = require('../data')
 
 exports.create = async (
-    { userId: currentUserId, contactEmail, organisationId, appType, status },
+    {
+        userId: currentUserId,
+        contactEmail,
+        organisationId,
+        appType,
+        status,
+        coreApp,
+    },
     db
 ) => {
     const app = await createApp(
@@ -17,6 +24,7 @@ exports.create = async (
             contactEmail,
             orgId: organisationId,
             appType: appType,
+            coreApp,
         },
         db
     )
